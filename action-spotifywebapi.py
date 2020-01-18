@@ -4,7 +4,7 @@
 from hermes_python.hermes import Hermes, MqttOptions
 import configparser
 import io
-from musicPlayer import MuuzikPlayer
+from musicplayer import MuuzikPlayer
 import toml
 
 USERNAME_INTENTS = "mcitar"
@@ -27,24 +27,24 @@ def read_configuration_file():
         return dict()
 
 def intent_callback_playSong(hermes, intent_message):
-    hermes.publish_end_session(intent_message.session_id, musicPlayer.play(hermes, intent_message))
+    hermes.publish_end_session(intent_message.session_id, muuzikPlayer.play(hermes, intent_message))
 
 def intent_callback_next(hermes, intent_message):
-    hermes.publish_end_session(intent_message.session_id, musicPlayer.next(hermes, intent_message))
+    hermes.publish_end_session(intent_message.session_id, muuzikPlayer.next(hermes, intent_message))
 
 def intent_callback_previous(hermes, intent_message):
-    hermes.publish_end_session(intent_message.session_id, musicPlayer.previous(hermes, intent_message))
+    hermes.publish_end_session(intent_message.session_id, muuzikPlayer.previous(hermes, intent_message))
 
 def intent_callback_pause(hermes, intent_message):
-    hermes.publish_end_session(intent_message.session_id, musicPlayer.pause(hermes, intent_message))
+    hermes.publish_end_session(intent_message.session_id, muuzikPlayer.pause(hermes, intent_message))
 
 def intent_callback_repeat(hermes, intent_message):
-    hermes.publish_end_session(intent_message.session_id, musicPlayer.repeat(hermes, intent_message))
+    hermes.publish_end_session(intent_message.session_id, muuzikPlayer.repeat(hermes, intent_message))
 
 
 if __name__ == "__main__":
     config = read_configuration_file()
-    translator = Translator(config)
+    muuzikPlayer = MuuzikPlayer(config)
 
     snips_config = toml.load('/etc/snips.toml')
     if 'mqtt' in snips_config['snips-common'].keys():

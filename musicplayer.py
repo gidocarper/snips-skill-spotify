@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+from hermes_python.hermes import Hermes, MqttOptions
 import sys
 import fnmatch
 from tinytag import TinyTag
