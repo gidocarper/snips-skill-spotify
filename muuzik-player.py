@@ -16,6 +16,7 @@ class MuuzikPlayer:
         self.pattern = '*.mp3'
         self.playlist = []
         self.startFirstSongOnce = True
+        self.self.current_track = 0
 
         try:
             self.pathToMusic = config['secret']['pathToMusic']
@@ -60,12 +61,26 @@ class MuuzikPlayer:
                     print('errpr')
 
         tracks_number = len(self.playlist)
-        current_track = 0
-        print(self.playlist)
+        self.current_track = 0
+        playSong(self)
+
+    def next(self, hermes, intent_message):
+        self.current_track += 1
+        playSong(self)
+
+    def previous(self, hermes, intent_message):
+        self.current_track -= 1
+        playSong(self)
+
+    def repeat(self, hermes, intent_message):
+        playSong(self)
+
+    def playSong(self):
+        # print(self.playlist)
         # start first track
         pygame.mixer.init(frequency = 48000)
         screen = pygame.display.set_mode((400, 300))
-        pygame.mixer.music.load(self.playlist[current_track])
+        pygame.mixer.music.load(self.playlist[self.current_track])
         pygame.mixer.music.set_volume(5.0)
         pygame.mixer.music.play()
 
@@ -84,12 +99,11 @@ class MuuzikPlayer:
                 elif event.type == NEXT:
 
                     # get next track (modulo number of tracks)
-                    current_track = (current_track + 1) % tracks_number
+                    self.current_track = (self.current_track + 1) % tracks_number
 
-                    print("Play:", self.playlist[current_track])
+                    print("Play:", self.playlist[self.current_track])
 
-                    pygame.mixer.music.load(self.playlist[current_track])
+                    pygame.mixer.music.load(self.playlist[self.current_track])
                     pygame.mixer.music.play()
-
 
         pygame.quit()
