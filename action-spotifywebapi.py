@@ -27,24 +27,24 @@ def read_configuration_file():
         return dict()
 
 def intent_callback_playSong(hermes, intent_message):
-    hermes.publish_end_session(intent_message.session_id, muuzikPlayer.play(hermes, intent_message))
+    hermes.publish_end_session(intent_message.session_id, musicplayer.play(hermes, intent_message))
 
 def intent_callback_next(hermes, intent_message):
-    hermes.publish_end_session(intent_message.session_id, muuzikPlayer.next(hermes, intent_message))
+    hermes.publish_end_session(intent_message.session_id, musicplayer.next(hermes, intent_message))
 
 def intent_callback_previous(hermes, intent_message):
-    hermes.publish_end_session(intent_message.session_id, muuzikPlayer.previous(hermes, intent_message))
+    hermes.publish_end_session(intent_message.session_id, musicplayer.previous(hermes, intent_message))
 
 def intent_callback_pause(hermes, intent_message):
-    hermes.publish_end_session(intent_message.session_id, muuzikPlayer.pause(hermes, intent_message))
+    hermes.publish_end_session(intent_message.session_id, musicplayer.pause(hermes, intent_message))
 
 def intent_callback_repeat(hermes, intent_message):
-    hermes.publish_end_session(intent_message.session_id, muuzikPlayer.repeat(hermes, intent_message))
+    hermes.publish_end_session(intent_message.session_id, musicplayer.repeat(hermes, intent_message))
 
 
 if __name__ == "__main__":
     config = read_configuration_file()
-    muuzikPlayer = MuuzikPlayer(config)
+    musicplayer = MuuzikPlayer(config)
 
     snips_config = toml.load('/etc/snips.toml')
     if 'mqtt' in snips_config['snips-common'].keys():
