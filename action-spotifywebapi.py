@@ -64,8 +64,8 @@ if __name__ == "__main__":
             .subscribe_intent('mcitar:pause', intent_callback_pause) \
             .subscribe_intent('resumeMusic', resumeMusic) \
             .subscribe_intent('speakerInterrupt', speakerInterrupt) \
-            .subscribe_intent('mcitar:playAlbum', playAlbum) \
-            .subscribe_intent('mcitar:playArtist', playArtist) \
+            .subscribe_intent('mcitar:playAlbum', intent_callback_playSong) \
+            .subscribe_intent('mcitar:playArtist', intent_callback_playSong) \
             .subscribe_intent('mcitar:playPlaylist', playPlaylist) \
             .subscribe_intent('getInfos', getInfos) \
             .subscribe_intent('addSong', addSong) \
