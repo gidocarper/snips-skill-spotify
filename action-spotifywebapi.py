@@ -59,6 +59,7 @@ if __name__ == "__main__":
         h.subscribe_intent('previousSong', intent_callback_previous) \
             .subscribe_intent('nextSong', intent_callback_next) \
             .subscribe_intent('mcitar:play', intent_callback_playSong) \
+            .subscribe_intent('mcitar:playresource', intent_callback_playSong) \
             .subscribe_intent('mcitar:playSong', intent_callback_playSong) \
             .subscribe_intent('mcitar:pause', intent_callback_pause) \
             .subscribe_intent('resumeMusic', resumeMusic) \
