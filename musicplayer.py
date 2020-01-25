@@ -25,7 +25,7 @@ class MuuzikPlayer:
         self.startFirstSongOnce = True
         self.current_track = 0
         self.running = False
-        pygame.mixer.init(frequency = 48000)
+        #pygame.mixer.init(frequency = 44100)
 
         self.pathToMusic = '/var/lib/snips/skills/snips-skill-spotify/Music'
         self.musicFile = []
@@ -38,7 +38,7 @@ class MuuzikPlayer:
         if intent_message.slots.Album:
             search = intent_message.slots.Album
 
-        if not str(path.exists('/var/lib/snips/skills/snips-skill-spotify/Music/db/musicFound.json')):
+        if not str(os.path.exists('/var/lib/snips/skills/snips-skill-spotify/Music/db/musicFound.json')):
             print('play Musik')
             songlist = []
             for root, dirs, files in os.walk(rootPath):
@@ -71,53 +71,81 @@ class MuuzikPlayer:
 
         print(self.musicFile[0])
 
+        title = ''
+        album = ''
+        artist = ''
+        genre = ''
+
+        if intent_message.slots.Title:
+            title = str(intent_message.slots.Title.first().value)
+
+        if intent_message.slots.Album:
+            album = str(intent_message.slots.Album.first().value)
+
+        if intent_message.slots.Artist:
+            artist = str(intent_message.slots.Artist.first().value)
+
+        if intent_message.slots.Genre:
+            genre = str(intent_message.slots.Genre.first().value)
+
+        print(title)
+        print(album)
+        print(genre)
+        print(artist)
+
         i = 0
         while i < len(self.musicFile):
             path = self.musicFile[i]['path']
             song = self.musicFile[i]['song']
             i += 1
 
-            if song.find(str(intent_message.slots.Artist.first().value)) > 0 \
-                    or song.find(intent_message.slots.Album.first().value) > 0 \
-                    or song.find(intent_message.slots.Title.first().value) > 0 \
-                    or song.find(intent_message.slots.Genre.first().value) > 0:
-                playlist.append(path)
+            if song.find(artist) > 0 \
+                    or song.find(album) > 0 \
+                    or song.find(title) > 0 \
+                    or song.find(genre) > 0:
+                self.playlist.append(path)
 
             #if len(self.playlist) > 50:
             #    break
 
         tracks_number = len(self.playlist)
         self.current_track = 0
-        self.playSong()
-        print(output)
-        return output
+
+        print(tracks_number)
+
+        return self.playSong()
+
 
     def next(self, hermes, intent_message):
         print('next')
         pygame.mixer.music.set_endevent(NEXT)
         self.current_track += 1
         self.playSong()
+        return 'okay'
 
     def previous(self, hermes, intent_message):
         print('previous')
         self.current_track -= 1
         self.playSong()
+        return 'okay'
 
     def repeat(self, hermes, intent_message):
         print('repeat')
         self.playSong()
+        return 'okay ich wieder hole'
 
     def stop(self, hermes, intent_message):
         print('stop')
         pygame.mixer.music.stop()
         pygame.mixer.set_endevent(type)
-
-#        pygame.quit()
+        pygame.quit()
+        return 'musik gestoppt'
 
     def pause(self, hermes, intent_message):
         print('pause')
         pygame.mixer.music.pause()
-        pygame.mixer.set_endevent(type)
+        #pygame.mixer.set_endevent(type)
+        return 'musik angehalten'
 
 
     def playSong(self):
@@ -126,6 +154,9 @@ class MuuzikPlayer:
         #self.playlist = ['/var/lib/snips/skills/snips-skill-spotify/Music/11_house/09_Unknown/Track07.mp3', '/var/lib/snips/skills/snips-skill-spotify/Music/11_house/09_Unknown/Track05.mp3', '/var/lib/snips/skills/snips-skill-spotify/Music/11_house/09_Unknown/Track06.mp3', '/var/lib/snips/skills/snips-skill-spotify/Music/11_house/09_Unknown/Track03.mp3', '/var/lib/snips/skills/snips-skill-spotify/Music/11_house/09_Unknown/Track08.mp3']
         self.tracks_number = len(self.playlist)
         #pygame.mixer.init(frequency = 48000)
+        audiofile = TinyTag.get(self.playlist[self.current_track])
+        pygame.mixer.init(frequency=audiofile.samplerate)
+
         screen = pygame.display.set_mode((400, 300))
         pygame.mixer.music.load(self.playlist[self.current_track])
         pygame.mixer.music.set_volume(5.0)
@@ -136,22 +167,35 @@ class MuuzikPlayer:
 
         self.running = True
 
-        if pygame.mixer.get_busy() != None:
-            print('test')
+        #self.current_track = (self.current_track + 1) % self.tracks_number
+        print("Play:", self.playlist[self.current_track])
+        #audiofile = TinyTag.get(self.playlist[self.current_track])
+        #pygame.mixer.init(frequency=audiofile.samplerate)
+        print(audiofile)
+        #samplerate
+        pygame.mixer.music.load(self.playlist[self.current_track])
+        pygame.mixer.music.play()
+        return 'Okay!'
 
-        while self.running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.running = False
+#        if pygame.mixer.get_busy() != None:
+#            print('test')
 
-                elif event.type == NEXT:
+#        while self.running:
+#            for event in pygame.event.get():
+#                if event.type == pygame.QUIT:
+#                    self.running = False
+
+#                elif event.type == NEXT:
 
                     # get next track (modulo number of tracks)
-                    self.current_track = (self.current_track + 1) % self.tracks_number
+#                    self.current_track = (self.current_track + 1) % self.tracks_number
 
-                    print("Play:", self.playlist[self.current_track])
+#                    print("Play:", self.playlist[self.current_track])
 
-                    pygame.mixer.music.load(self.playlist[self.current_track])
-                    pygame.mixer.music.play()
+#                    pygame.mixer.music.load(self.playlist[self.current_track])
+#                    pygame.mixer.music.play()
 
         #pygame.quit()
+
+ 
+
